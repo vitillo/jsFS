@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>jsFS</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body id="home">
+  <script src="../js/deployJava.js"></script>
+  <script>
+    function assert(cond){
+      if (!cond) throw new Error("Assert failed.");
+    }
+
+    var attributes = {id:'fs'};
+    var parameters = {jnlp_href: '../JsFsApplet.jnlp'} ;
+    deployJava.runApplet(attributes, parameters, '1.6');
+
+    console.log("Current directory is: " + fs.cwd());
+
+    var ls = fs.ls();
+    var output = "";
+    for(i = 0; i < ls.length; i++){
+      output += ls[i] + " ";
+    }
+    console.log(output);
+    
+    assert(fs.cd("/tmp"));
+    fs.rm("foo");
+    assert(fs.mkdir("foo"));
+    assert(fs.cd("foo"));
+    assert(fs.write("src", "hello"));
+    assert(fs.read("src") == "hello");
+    assert(fs.cp("src", "dst"));
+    assert(fs.read("dst") == "hello");
+    assert(fs.cd("../"));
+    assert(fs.rm("foo"));
+    </script>
+</body>
+</html>
