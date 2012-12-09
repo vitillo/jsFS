@@ -157,23 +157,22 @@ public class JsFsApplet extends Applet {
       public Boolean run() {
         FileChannel in = null;
         FileChannel out = null;
-        
+
         try{
           in = new FileInputStream(getAbsolutePath(source)).getChannel();
-          try{
-            out = new FileInputStream(getAbsolutePath(destination)).getChannel();
-          }catch(FileNotFoundException e){
-            new File(getAbsolutePath(destination)).createNewFile();
-            out = new FileOutputStream(getAbsolutePath(destination)).getChannel();
-          }
-          
+          out = new FileOutputStream(getAbsolutePath(destination)).getChannel();
           out.transferFrom(in, 0, in.size());
         }catch(Exception e){
           return false;
         }finally{
           try {
-            in.close();
-            out.close();
+            if(in != null){
+              in.close();
+            }
+
+            if(out != null){
+              out.close();
+            }
           } catch (IOException e) {
           }
         }
