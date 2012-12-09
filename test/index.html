@@ -25,7 +25,6 @@
     }
     console.log(output);
     
-    assert(fs.cd("/tmp"));
     fs.rm("foo");
     assert(fs.mkdir("foo"));
     assert(fs.cd("foo"));
@@ -33,7 +32,7 @@
     assert(fs.read("src") == "hello");
     assert(fs.cp("src", "dst"));
     assert(fs.read("dst") == "hello");
-    assert(fs.cd("../"));
+    assert(fs.cd(".."));
     assert(fs.rm("foo"));
     </script>
 </body>

@@ -11,9 +11,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Scanner;
 
 public class JsFsApplet extends Applet {
   public JsFsApplet(){
@@ -107,21 +107,17 @@ public class JsFsApplet extends Applet {
     
     return AccessController.doPrivileged(new PrivilegedAction<String>() {
       public String run() {
-        FileInputStream stream = null;
+        // We can't use a memory mapped file because of this bug: http://bugs.sun.com/view_bug.do?bug_id=4724038
+        Scanner scanner = null;
 
-        try {
-          stream = new FileInputStream(new File(getAbsolutePath(path)));
-          FileChannel fc = stream.getChannel();
-          MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-          return Charset.defaultCharset().decode(bb).toString();
-        } catch (IOException e) {
+        try{
+          scanner = new Scanner(new File(getAbsolutePath(path))).useDelimiter("\\A");
+          return scanner.next();
+        }catch(FileNotFoundException e){
           return null;
-        } finally {
-          try {
-            if(stream != null){
-            	stream.close();
-            }
-          } catch (IOException e) {
+        }finally{
+          if(scanner != null){
+            scanner.close();
           }
         }
       }
