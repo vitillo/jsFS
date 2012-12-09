@@ -19,7 +19,7 @@ public class JsFsApplet extends Applet {
   public JsFsApplet(){
     AccessController.doPrivileged(new PrivilegedAction<Void>() {
       public Void run() {
-        m_cwd = m_home = System.getProperty("user.home") + "/";
+        m_cwd = m_home = System.getProperty("user.home") + File.separator;
         return null;
       }
     });
@@ -43,7 +43,7 @@ public class JsFsApplet extends Applet {
         File dir = new File(getAbsolutePath(path));
         
         if(dir.exists()){
-          m_cwd = dir.toString() + "/";
+          m_cwd = dir.toString() + File.separator;
           return true;
         }
         
@@ -188,7 +188,7 @@ public class JsFsApplet extends Applet {
   }
   
   private String getAbsolutePath(String path){
-    return path.startsWith("/") ? path : m_cwd + path;
+    return new File(path).isAbsolute() ? path : m_cwd + path;
   }
   
   private String m_cwd;
