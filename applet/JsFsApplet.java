@@ -14,12 +14,28 @@ import java.nio.channels.FileChannel;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Scanner;
+import javax.swing.JFileChooser;
 
 public class JsFsApplet extends Applet {
   public JsFsApplet(){
     AccessController.doPrivileged(new PrivilegedAction<Void>() {
       public Void run() {
         m_cwd = m_home = System.getProperty("user.home") + File.separator;
+        return null;
+      }
+    });
+  }
+
+  public String explore(){
+    return AccessController.doPrivileged(new PrivilegedAction<String>() {
+      public String run() {
+        JFileChooser fc = new JFileChooser();
+
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if(fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+          return fc.getSelectedFile().toString();
+        }
+
         return null;
       }
     });
