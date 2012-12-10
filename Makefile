@@ -10,7 +10,7 @@ all: $(JAR)
 
 $(KEYSTORE): 
 	keytool -genkey -keystore pKeyStore -alias self
-	keytool -selfcert -keystore pKeyStore -alias self
+	keytool -selfcert -keystore pKeyStore -alias self -validity 1800
 
 $(JAR): $(KEYSTORE) $(SRC)
 	javac $(SRC)
