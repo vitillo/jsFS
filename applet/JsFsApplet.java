@@ -2,6 +2,7 @@ package applet;
 
 import javax.swing.JApplet;
 import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,11 +30,11 @@ public class JsFsApplet extends JApplet {
   public String explore(){
     return AccessController.doPrivileged(new PrivilegedAction<String>() {
       public String run() {
-        JFileChooser fc = new JFileChooser();
-
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        if(fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
-          return fc.getSelectedFile().toString();
+        try {
+          DirectoryGetter dg = new DirectoryGetter();
+          SwingUtilities.invokeAndWait(dg);
+          return dg.getDirectory();
+        }catch(Exception e){
         }
 
         return null;
@@ -201,7 +202,24 @@ public class JsFsApplet extends JApplet {
   private String getAbsolutePath(String path){
     return new File(path).isAbsolute() ? path : m_cwd + path;
   }
-  
+
+  private class DirectoryGetter implements Runnable{
+    private volatile String m_directory = null;
+
+    public void run(){
+      JFileChooser fc = new JFileChooser();
+
+      fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+      if(fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+        m_directory = fc.getSelectedFile().toString();
+      }
+    }
+
+    public String getDirectory(){
+      return m_directory;
+    }
+  }
+
   private String m_cwd;
   private String m_home;
 }
