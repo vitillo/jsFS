@@ -1,6 +1,7 @@
 package applet;
 
-import java.applet.Applet;
+import javax.swing.JApplet;
+import javax.swing.JFileChooser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,9 +15,8 @@ import java.nio.channels.FileChannel;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Scanner;
-import javax.swing.JFileChooser;
 
-public class JsFsApplet extends Applet {
+public class JsFsApplet extends JApplet {
   public JsFsApplet(){
     AccessController.doPrivileged(new PrivilegedAction<Void>() {
       public Void run() {
